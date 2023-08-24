@@ -1,0 +1,43 @@
+{% extends 'flatpages/default.html' %}
+
+{% block title %}
+News - add news
+{% endblock title %}
+
+
+{% block content %}
+
+    <h1 class="col-lg-12 text-center">Add your oun news</h1>
+    {% if user.is_authenticated %}
+    <br>
+    <p>Note: You can't create more than 3 news for each day</p>
+    {% for message in messages %}
+        <div class="message {{ messages.error }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <br>
+    <form method="POST">
+        {% csrf_token %}
+
+    <label for="news_title">Title</label>
+    <input name="news_title" type="text" required>
+
+    <label for="category">Category</label>
+    <select multiple name="category" size="1" required> {% for category in categories %} <option value="{{ category.id }}"> {{ category.category_name }} </option> {% endfor %} </select>
+
+    <p><label for="news_text">Text</label><br>
+    <textarea name="news_text" cols="100" rows="8" required></textarea></p>
+
+    <p><input type="submit" value="Добавить новость"></p>
+    </form>
+    {% else %}
+    <p>Неавторизованные пользователи не могут создавать новости. Пожалуйста, авторизуйтесь или зарегистрируйтесь</p>
+    <p><a href="{% url 'account_login' %}">Sign In</a> <a href="{% url 'account_signup' %}">Sign Up</a></p>
+    {% endif %}
+
+
+
+{% endblock content %}
+
+

@@ -1,0 +1,22 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+
+{% block title %}
+News - add news denied
+{% endblock title %}
+
+
+{% block content %}
+
+    <br>
+    <br>
+    <h4>Авторы не могут создавать больше трех новостей в день. Мы ждем Ваших новостей завтра!</h4>
+    <br>
+    <p>Go <a href="{% url 'add' 'add' %}">Back</a></p>
+    
+    
+
+
+{% endblock content %}
+

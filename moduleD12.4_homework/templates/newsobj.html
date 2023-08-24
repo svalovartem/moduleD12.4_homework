@@ -1,0 +1,26 @@
+
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+{% block title %}
+{{ newsobj.news_title }}
+{% endblock title %}
+
+
+{% block content %}
+        {% if newsobj %}
+                <h3 class="col-lg-12 text-center"> {{ newsobj.news_title|censor }} </h3>
+                <p> {{ newsobj.create_time.date|date:'d-M-Y' }} {{ newsobj.create_time.time|time:'H:i' }} </p>
+                <p> Author: {{ newsobj.post_author.author.username }} </p>
+                <p>
+                        {% for category in newsobj.category.all%}
+                        {{ category }}
+                        {% endfor %}
+                </p>
+                <p> {{ newsobj.news_text|censor|multiply:20 }} </p>
+                <p> News rating: {{ newsobj.news_rating }} </p>
+                <p><button><a href="{% url 'edit' newsobj.id %}"><u>Редактировать новость</u></a></button> <button><a href="{% url 'delete' newsobj.id %}"><u> Удалить новость </u></a></button></p>
+        {% else %}
+                <h2>Статья была удалена или никогда не существовала</h2>
+        {% endif %}
+{% endblock content %}

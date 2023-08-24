@@ -1,0 +1,24 @@
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <h1 class="col-lg-12 text-center">{{ category }} news</h1>
+
+        {% for post in posts %}
+            <h3><a href="http://127.0.0.1:8000/news/{{post.id}}">{{ post.news_title|censor }}</a> {{ post.create_time.date|date:'d M Y' }}</h3>
+            <p>Author: {{ post.post_author.author.username }} </p>
+            <p>
+                {% for category in post.category.all%}
+                {{ category }}
+                {% endfor %}
+            </p>
+            <p> {{ post.news_text|multiply:20|truncatechars:50|censor }} </p>
+        {% endfor %}
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+>>> from news.models import *
+
+# Создать двух пользователей (с помощью метода User.objects.create_user).
+>>> User.objects.create_user(username='Mary')
+<User: Mary>
+>>> User.objects.create_user(username='Lily')
+<User: Lily>
+>>> User.objects.create_user(username='Harry')
+<User: Harry>
+>>> User.objects.create_user(username='SmallEvil')
+<User: SmallEvil>
+>>> User.objects.all().values('id', 'username')
+<QuerySet [{'id': 4, 'username': 'Harry'}, {'id': 3, 'username': 'Lily'}, {'id': 2, 'username': 'Mary'}, {'id': 5, 'username': 'SmallEvil'}, {'id': 1, 'username': 'a
+dmin'}]>
+
+# Создать два объекта модели Author, связанные с пользователями.
+>>> au = User.objects.get(id=2)
+>>> Author.objects.create(author=au)
+<Author: Author object (1)>
+>>> Author.objects.create(author=User.objects.get(id=5))
+<Author: Author object (2)>
+>>> Author.objects.all().values()
+<QuerySet [{'id': 1, 'author_id': 2, 'author_rating': 0}, {'id': 2, 'author_id': 5, 'author_rating': 0}]>
+
+# Добавить 4 категории в модель Category.
+>>> Category.objects.create(category_name='Horror')
+<Category: Category object (1)>
+>>> Category.objects.create(category_name='Drama')
+<Category: Category object (2)>
+>>> Category.objects.create(category_name='Comedy')
+<Category: Category object (3)>
+>>> Category.objects.create(category_name='Poetry')
+<Category: Category object (4)>
+>>> Category.objects.all().values()
+<QuerySet [{'id': 1, 'category_name': 'Horror'}, {'id': 2, 'category_name': 'Drama'}, {'id': 3, 'category_name': 'Comedy'}, {'id': 4, 'category_name': 'Poetry'}]>
+
+# Добавить 2 статьи и 1 новость.
+>>> Post.objects.create(post_author=Author.objects.get(id=1), news_title='Good news', news_text='Good news text', news_type_choice='nw')
+<Post: Post object (1)>
+>>> Post.objects.create(post_author=Author.objects.get(id=2), news_title='Bad story for bad cats', news_text='Bad story text', news_type_choice='ar')
+<Post: Post object (2)>
+>>> Post.objects.create(post_author=Author.objects.get(author_id=5), news_title='Another bad story for cats', news_text='Another bad story text', news_type_choice='a
+r')
+<Post: Post object (3)>
+
+# Присвоить им категории (как минимум в одной статье/новости должно быть не меньше 2 категорий).
+>>> Post.objects.get(id=1).category.add(Category.objects.get(id=3), Category.objects.get(id=4))
+>>> Post.objects.get(id=2).category.add(Category.objects.get(id=1), Category.objects.get(id=2))
+>>> Post.objects.get(id=3).category.add(Category.objects.get(id=1), Category.objects.get(id=2), Category.objects.get(id=3))
+
+# Создать как минимум 4 комментария к разным объектам модели Post (в каждом объекте должен быть как минимум один комментарий).
+>>> Comment.objects.create(comment_post_connect=Post.objects.get(id=1), comment_user_connect=User.objects.get(id=5), comment_text='too sweet')
+<Comment: Comment object (1)>
+>>> Comment.objects.create(comment_post_connect=Post.objects.get(id=1), comment_user_connect=User.objects.get(id=1), comment_text="don't be so evil")
+<Comment: Comment object (2)>
+Comment.objects.create(comment_post_connect=Post.objects.get(id=2), comment_user_connect=User.objects.get(id=3), comment_text="scared")
+<Comment: Comment object (3)>
+Comment.objects.create(comment_post_connect=Post.objects.get(id=2), comment_user_connect=User.objects.get(id=4), comment_text="love it")
+<Comment: Comment object (4)>
+>>> Comment.objects.create(comment_post_connect=Post.objects.get(id=3), comment_user_connect=User.objects.get(id=4), comment_text="you're fantastic")
+<Comment: Comment object (5)>
+
+# Применяя функции like() и dislike() к статьям/новостям и комментариям, скорректировать рейтинги этих объектов.
+>>> Post.objects.get(id=1).dislike()
+>>> Post.objects.get(id=1).dislike()
+>>> Post.objects.get(id=1).like()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=2).like()
+>>> Post.objects.get(id=3).like()
+>>> Post.objects.get(id=3).like()
+>>> Comment.objects.get(id=1).dislike()
+>>> Comment.objects.get(id=1).dislike()
+>>> Comment.objects.get(id=1).dislike()
+>>> Comment.objects.get(id=2).like()
+>>> Comment.objects.get(id=3).dislike()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=4).like()
+>>> Comment.objects.get(id=5).like()
+
+# Обновить рейтинги пользователей.
+>>> for _ in Author.objects.all(): _.update_rating()
+...
+>>> Author.objects.all().values()
+<QuerySet [{'id': 1, 'author_id': 2, 'author_rating': -5}, {'id': 2, 'author_id': 5, 'author_rating': 17}]>
+
+# Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+>>> Author.objects.order_by('-author_rating')[:1].values('author__username', 'author_rating')
+<QuerySet [{'author__username': 'SmallEvil', 'author_rating': 17}]>
+
+# Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, основываясь на лайках/дислайках к этой статье.
+>>> for _ in Post.objects.order_by('-news_rating')[:1]: Post.objects.order_by('-news_rating')[:1].values('create_time__date', 'post_author__author__username', 'news_
+rating', 'news_title'), _.preview()
+...
+(<QuerySet [{'create_time__date': datetime.date(2023, 4, 8), 'post_author__author__username': 'SmallEvil', 'news_rating': 4, 'news_title': 'Bad story for bad cats'}]
+>, 'Bad story text...')
+
+# Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье.
+>>> Comment.objects.filter(comment_post_connect=Post.objects.order_by('-news_rating')[:1]).values('comment_create_date__date', 'comment_user_connect__username','comm
+ent_rating', 'comment_text')
+<QuerySet [{'comment_create_date__date': datetime.date(2023, 4, 9), 'comment_user_connect__username': 'Lily', 'comment_rating': -1, 'comment_text': 'scared'}, {'comm
+ent_create_date__date': datetime.date(2023, 4, 9), 'comment_user_connect__username': 'Harry', 'comment_rating': 2, 'comment_text': 'love it'}]>
+
+>>> Category.objects.get(id=1).subscribers.get(username='Lily').email
+'larsy-c@yandex.ru'
+
+>>> Post.objects.all().filter(post_author_id=1).filter(create_time__date='2023-4-8').values()
+<QuerySet [{'id': 1, 'post_author_id': 1, 'news_title': 'Good news', 'news_text': 'Good news text', 'news_rating': -1, 'create_time': datetime.datetime(
+2023, 4, 8, 21, 45, 34, 849764, tzinfo=datetime.timezone.utc), 'news_type_choice': 'nw'}]>
+
+>>> Post.objects.all().filter(post_author_id=1).filter(create_time__date=datetime.today())
+<QuerySet []>

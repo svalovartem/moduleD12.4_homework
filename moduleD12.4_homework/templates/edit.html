@@ -1,0 +1,30 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+
+{% block title %}
+News - edit news
+{% endblock title %}
+
+
+{% block content %}
+
+    <h1 class="col-lg-12 text-center">News edit</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+
+
+    <label for="news_title">Title</label>
+    <input name="news_title" type="text">
+
+    <label for="category">Category</label>
+    <select multiple name="category" size="1"> {% for category in categories %} <option value="{{ category.id }}"> {{ category.category_name }} </option> {% endfor %} </select>
+
+    <p><label for="news_text">Text</label><br>
+    <textarea name="news_text" cols="100" rows="8"></textarea></p>
+
+    <p><input type="submit" value="Редактировать новость"></p>
+    </form>
+
+{% endblock content %}

@@ -1,0 +1,25 @@
+2023-05-02 15:45:53,235 ERROR C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\utils\log.py (<class 'django.utils.datastructures.MultiValueDictKeyError'>, MultiValueDictKeyError('category'), <traceback object at 0x000001906D93BEC0>) Internal Server Error: /news/news/add
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\utils\datastructures.py", line 84, in __getitem__
+    list_ = super().__getitem__(key)
+KeyError: 'category'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\core\handlers\base.py", line 197, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\views\generic\base.py", line 104, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\contrib\auth\mixins.py", line 109, in dispatch
+    return super().dispatch(request, *args, **kwargs)
+  File "C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\views\generic\base.py", line 143, in dispatch
+    return handler(request, *args, **kwargs)
+  File "C:\Users\User\Documents\Python-обучение\NewsPaper\venv\NewsPaper\news\views.py", line 99, in post
+    category_id = request.POST['category']
+  File "C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\utils\datastructures.py", line 86, in __getitem__
+    raise MultiValueDictKeyError(key)
+django.utils.datastructures.MultiValueDictKeyError: 'category'
+2023-08-24 10:45:00,474 ERROR C:\Users\User\Documents\Python-обучение\NewsPaper\venv\lib\site-packages\django\core\servers\basehttp.py None "POST /news/news/add HTTP/1.1" 500 145

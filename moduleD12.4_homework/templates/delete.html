@@ -1,0 +1,22 @@
+{% extends 'flatpages/default.html' %}
+{% load custom_filters %}
+
+
+{% block title %}
+News - delete news
+{% endblock title %}
+
+
+{% block content %}
+
+    <h1 class="col-lg-12 text-center">News delete</h1>
+
+    <br>
+    <p> Вы действительно хотите удалить данную новость? </p>
+    <form method="POST">
+    {% csrf_token %}
+    <input type="submit" value="подтвердить"></form>
+    
+
+
+{% endblock content %}

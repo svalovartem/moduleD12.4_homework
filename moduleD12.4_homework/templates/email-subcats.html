@@ -1,0 +1,17 @@
+
+{% load custom_filters %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ category }} news | NewsPaper</title>
+    </head>
+    <body>
+        <div >
+            <h3> <a href="http://127.0.0.1:8000/news/{{pk}}"> {{ news_title|censor }} </a></h3>
+            <p> {{ news_text|multiply:20|truncatechars:50|censor }} </p>
+        </div>
+    </body>
+</html>
